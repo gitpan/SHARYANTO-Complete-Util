@@ -36,6 +36,7 @@
       "test" : {
          "requires" : {
             "File::Spec" : "0",
+            "File::Which" : "0",
             "File::chdir" : "0",
             "IO::Handle" : "0",
             "IPC::Open3" : "0",
@@ -45,6 +46,6 @@
    },
    "release_status" : "stable",
    "resources" : {},
-   "version" : "0.01"
+   "version" : "0.02"
 }
 

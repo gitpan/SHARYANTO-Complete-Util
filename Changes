@@ -1,5 +1,10 @@
 Revision history for SHARYANTO-Complete-Util
 
+0.02    2013-11-04 (SHARYANTO)
+
+        - Rename parse_{bash,shell}_cmdline().
+
+
 0.01    2013-11-03 (SHARYANTO)
 
         - First release. Split from Perinci-BashComplete because the routines

@@ -14,10 +14,10 @@ our @EXPORT_OK = qw(
                        complete_file
                        complete_program
 
-                       parse_bash_cmdline
+                       parse_shell_cmdline
                );
 
-our $VERSION = '0.01'; # VERSION
+our $VERSION = '0.02'; # VERSION
 
 our %SPEC;
 
@@ -200,7 +200,7 @@ sub _line_to_argv {
 #    [split(/\h+/, $_[0])];
 #}
 
-$SPEC{parse_bash_cmdline} = {
+$SPEC{parse_shell_cmdline} = {
     v => 1.1,
     summary => 'Parse shell command-line for processing by completion routines',
     description => <<'_',
@@ -237,9 +237,9 @@ _
     },
     result_naked => 1,
 };
-sub parse_bash_cmdline {
+sub parse_shell_cmdline {
     my ($line, $point, $opts) = @_;
-    #$log->tracef("-> parse_bash_cmdline(%s, %s)", $line, $point);
+    #$log->tracef("-> parse_shell_cmdline(%s, %s)", $line, $point);
     $opts //= {};
     $opts->{parse_line_sub} //= \&_line_to_argv;
 
@@ -298,7 +298,7 @@ SHARYANTO::Complete::Util - Shell tab completion routines
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 FUNCTIONS
 
@@ -391,7 +391,7 @@ Return value:
 
 Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
 
-=head2 parse_bash_cmdline(%args) -> [status, msg, result, meta]
+=head2 parse_shell_cmdline(%args) -> [status, msg, result, meta]
 
 Parse shell command-line for processing by completion routines.
 

@@ -2,7 +2,7 @@ NAME
     SHARYANTO::Complete::Util - Shell tab completion routines
 
 VERSION
-    version 0.01
+    version 0.02
 
 FUNCTIONS
   complete_array(%args) -> [status, msg, result, meta]
@@ -93,7 +93,7 @@ FUNCTIONS
     the actual result. Fourth element (meta) is called result metadata and
     is optional, a hash that contains extra information.
 
-  parse_bash_cmdline(%args) -> [status, msg, result, meta]
+  parse_shell_cmdline(%args) -> [status, msg, result, meta]
     Parse shell command-line for processing by completion routines.
 
     Currently only supports bash.

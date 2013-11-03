@@ -5,9 +5,11 @@ use strict;
 use warnings;
 #use Log::Any '$log';
 
+use File::Which;
+use SHARYANTO::Complete::Util qw(parse_shell_cmdline);
 use Test::More;
 
-use SHARYANTO::Complete::Util qw(parse_bash_cmdline);
+plan skip_all => "bash needed" unless which("bash");
 
 subtest "_line_to_argv" => sub {
     is_deeply(
@@ -46,19 +48,19 @@ _
 };
 
 is_deeply(
-    parse_bash_cmdline("foo bar baz qux", 0),
+    parse_shell_cmdline("foo bar baz qux", 0),
     {words => [qw/bar baz qux/], cword=>0},
     "simple 1",
 );
 is_deeply(
-    parse_bash_cmdline("foo bar baz qux", 3),
+    parse_shell_cmdline("foo bar baz qux", 3),
     {words => [qw/bar baz qux/], cword=>0},
     "simple 2",
 );
 is_deeply(
-    parse_bash_cmdline("foo bar baz qux", 4),
+    parse_shell_cmdline("foo bar baz qux", 4),
     {words => [qw/baz qux/], cword=>0},
-    "simple 2",
+    "simple 3",
 );
 
 done_testing;
