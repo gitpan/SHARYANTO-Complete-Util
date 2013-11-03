@@ -1,0 +1,6 @@
+Revision history for SHARYANTO-Complete-Util
+
+0.01    2013-11-03 (SHARYANTO)
+
+        - First release. Split from Perinci-BashComplete because the routines
+          are general and not tied to Perinci/Rinci.

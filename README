@@ -1,0 +1,151 @@
+NAME
+    SHARYANTO::Complete::Util - Shell tab completion routines
+
+VERSION
+    version 0.01
+
+FUNCTIONS
+  complete_array(%args) -> [status, msg, result, meta]
+    Arguments ('*' denotes required arguments):
+
+    *   array* => *array*
+
+    *   ci => *bool* (default: 0)
+
+    *   word => *str* (default: "")
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+  complete_env(%args) -> [status, msg, result, meta]
+    Arguments ('*' denotes required arguments):
+
+    *   ci => *bool* (default: 0)
+
+    *   word => *str* (default: "")
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+  complete_file(%args) -> [status, msg, result, meta]
+    Arguments ('*' denotes required arguments):
+
+    *   d => *bool* (default: 1)
+
+        Whether to include directory.
+
+    *   f => *bool* (default: 1)
+
+        Whether to include file.
+
+    *   word => *str* (default: "")
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+  complete_hash_key(%args) -> [status, msg, result, meta]
+    Arguments ('*' denotes required arguments):
+
+    *   ci => *bool* (default: 0)
+
+    *   hash* => *hash*
+
+    *   word => *str* (default: "")
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+  complete_program(%args) -> [status, msg, result, meta]
+    Arguments ('*' denotes required arguments):
+
+    *   word => *str* (default: "")
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+  parse_bash_cmdline(%args) -> [status, msg, result, meta]
+    Parse shell command-line for processing by completion routines.
+
+    Currently only supports bash.
+
+    Returns hash with the following keys: "words" (array of str, equivalent
+    to "COMP_WORDS" provided by shell to completion routine), "cword" (int,
+    equivalent to shell-provided "COMP_CWORD").
+
+    Arguments ('*' denotes required arguments):
+
+    *   cmdline => *str*
+
+        Command-line, defaults to COMP_LINE environment.
+
+    *   opts => *hash*
+
+        Currently known options: parse*line*sub (code).
+
+    *   point => *int*
+
+        Point/position to complete in command-line, defaults to COMP_POINT.
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+HOMEPAGE
+    Please visit the project's homepage at
+    <https://metacpan.org/release/SHARYANTO-Complete-Util>.
+
+SOURCE
+    Source repository is at
+    <https://github.com/sharyanto/perl-SHARYANTO-Complete-Util>.
+
+BUGS
+    Please report any bugs or feature requests on the bugtracker website
+    http://rt.cpan.org/Public/Dist/Display.html?Name=SHARYANTO-Complete-Util
+
+    When submitting a bug or request, please include a test-file or a patch
+    to an existing test-file that illustrates the bug or desired feature.
+
+AUTHOR
+    Steven Haryanto <stevenharyanto@gmail.com>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2013 by Steven Haryanto.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
