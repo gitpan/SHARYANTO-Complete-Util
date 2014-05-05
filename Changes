@@ -1,5 +1,12 @@
 Revision history for SHARYANTO-Complete-Util
 
+0.03    2014-05-05 (SHARYANTO)
+
+        - No functional changes.
+
+        - [test] Skip case sensitive test on Windows [CT].
+
+
 0.02    2013-11-04 (SHARYANTO)
 
         - Rename parse_{bash,shell}_cmdline().

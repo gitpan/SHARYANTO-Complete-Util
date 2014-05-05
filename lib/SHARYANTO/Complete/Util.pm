@@ -3,7 +3,7 @@ package SHARYANTO::Complete::Util;
 use 5.010001;
 use strict;
 use warnings;
-#use Log::Any '$log';
+use Log::Any '$log';
 
 require Exporter;
 our @ISA = qw(Exporter);
@@ -17,7 +17,7 @@ our @EXPORT_OK = qw(
                        parse_shell_cmdline
                );
 
-our $VERSION = '0.02'; # VERSION
+our $VERSION = '0.03'; # VERSION
 
 our %SPEC;
 
@@ -32,7 +32,6 @@ $SPEC{complete_array} = {
 };
 sub complete_array {
     my %args  = @_;
-    #$log->tracef("=> complete_array(%s)", \%args);
     my $array = $args{array} or die "Please specify array";
     my $word  = $args{word} // "";
     my $ci    = $args{ci};
@@ -57,7 +56,6 @@ $SPEC{complete_hash_key} = {
 };
 sub complete_hash_key {
     my %args  = @_;
-    #$log->tracef("=> complete_hash_key(%s)", \%args);
     my $hash  = $args{hash} or die "Please specify hash";
     my $word  = $args{word} // "";
     my $ci    = $args{ci};
@@ -75,7 +73,6 @@ $SPEC{complete_env} = {
 };
 sub complete_env {
     my %args  = @_;
-    #$log->tracef("=> complete_env(%s)", \%args);
     my $word  = $args{word} // "";
     my $ci    = $args{ci};
     if ($word =~ /^\$/) {
@@ -96,7 +93,6 @@ sub complete_program {
     require List::MoreUtils;
 
     my %args  = @_;
-    #$log->tracef("=> complete_program(%s)", \%args);
     my $word  = $args{word} // "";
 
     my @words;
@@ -133,7 +129,6 @@ $SPEC{complete_file} = {
 };
 sub complete_file {
     my %args  = @_;
-    #$log->tracef("=> complete_file(%s)", \%args);
     my $word  = $args{word} // "";
     my $f     = $args{f} // 1;
     my $d     = $args{d} // 1;
@@ -239,15 +234,17 @@ _
 };
 sub parse_shell_cmdline {
     my ($line, $point, $opts) = @_;
-    #$log->tracef("-> parse_shell_cmdline(%s, %s)", $line, $point);
     $opts //= {};
     $opts->{parse_line_sub} //= \&_line_to_argv;
 
     $line  //= $ENV{COMP_LINE};
     $point //= $ENV{COMP_POINT};
-    #$log->tracef("line=q(%s), point=%s", $line, $point);
 
     my $left  = substr($line, 0, $point);
+    my $right = substr($line, $point);
+    $log->tracef("line=<%s>, point=%s, left=<%s>, right=<%s>",
+                 $line, $point, $left, $right);
+
     my @left;
     if (length($left)) {
         @left = @{ $opts->{parse_line_sub}->($left) };
@@ -257,14 +254,13 @@ sub parse_shell_cmdline {
         shift @left;
     }
 
-    my $right = substr($line, $point);
     my @right;
     if (length($right)) {
+        # shave off the rest of the word at "cursor"
         $right =~ s/^\S+//;
         @right = @{ $opts->{parse_line_sub}->($right) } if length($right);
     }
-    #$log->tracef("left=q(%s), \@left=%s, right=q(%s), \@right=%s",
-    #             $left, \@left, $right, \@right);
+    $log->tracef("\@left=%s, \@right=%s", \@left, \@right);
 
     my $words = [@left, @right],
     my $cword = @left ? scalar(@left)-1 : 0;
@@ -290,7 +286,7 @@ __END__
 
 =pod
 
-=encoding utf-8
+=encoding UTF-8
 
 =head1 NAME
 
@@ -298,12 +294,12 @@ SHARYANTO::Complete::Util - Shell tab completion routines
 
 =head1 VERSION
 
-version 0.02
+This document describes version 0.03 of SHARYANTO::Complete::Util (from Perl distribution SHARYANTO-Complete-Util), released on 2014-05-05.
 
 =head1 FUNCTIONS
 
 
-=head2 complete_array(%args) -> [status, msg, result, meta]
+=head2 complete_array(%args) -> any
 
 Arguments ('*' denotes required arguments):
 
@@ -319,9 +315,8 @@ Arguments ('*' denotes required arguments):
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
 
-=head2 complete_env(%args) -> [status, msg, result, meta]
+=head2 complete_env(%args) -> any
 
 Arguments ('*' denotes required arguments):
 
@@ -335,9 +330,8 @@ Arguments ('*' denotes required arguments):
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
 
-=head2 complete_file(%args) -> [status, msg, result, meta]
+=head2 complete_file(%args) -> any
 
 Arguments ('*' denotes required arguments):
 
@@ -357,9 +351,8 @@ Whether to include file.
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
 
-=head2 complete_hash_key(%args) -> [status, msg, result, meta]
+=head2 complete_hash_key(%args) -> any
 
 Arguments ('*' denotes required arguments):
 
@@ -375,9 +368,8 @@ Arguments ('*' denotes required arguments):
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
 
-=head2 complete_program(%args) -> [status, msg, result, meta]
+=head2 complete_program(%args) -> any
 
 Arguments ('*' denotes required arguments):
 
@@ -389,9 +381,8 @@ Arguments ('*' denotes required arguments):
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
 
-=head2 parse_shell_cmdline(%args) -> [status, msg, result, meta]
+=head2 parse_shell_cmdline(@args) -> any
 
 Parse shell command-line for processing by completion routines.
 
@@ -421,7 +412,9 @@ Point/position to complete in command-line, defaults to COMP_POINT.
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
+=head1 SEE ALSO
+
+L<SHARYANTO>
 
 =head1 HOMEPAGE
 
@@ -433,8 +426,7 @@ Source repository is at L<https://github.com/sharyanto/perl-SHARYANTO-Complete-U
 
 =head1 BUGS
 
-Please report any bugs or feature requests on the bugtracker website
-http://rt.cpan.org/Public/Dist/Display.html?Name=SHARYANTO-Complete-Util
+Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=SHARYANTO-Complete-Util>
 
 When submitting a bug or request, please include a test-file or a
 patch to an existing test-file that illustrates the bug or desired
@@ -446,7 +438,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Steven Haryanto.
+This software is copyright (c) 2014 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
