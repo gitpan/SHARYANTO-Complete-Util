@@ -14,10 +14,12 @@ our @EXPORT_OK = qw(
                        complete_file
                        complete_program
 
+                       mimic_shell_dir_completion
+
                        parse_shell_cmdline
                );
 
-our $VERSION = '0.03'; # VERSION
+our $VERSION = '0.04'; # VERSION
 
 our %SPEC;
 
@@ -167,6 +169,36 @@ sub complete_file {
     $w;
 }
 
+$SPEC{mimic_shell_dir_completion} = {
+    v => 1.1,
+    summary => 'Make completion of paths behave more like shell',
+    description => <<'_',
+
+This function employs a trick to make directory/path completion work more like
+shell's own. In shell, when completing directory, the sole completion for `foo/`
+is `foo/`, the cursor doesn't automatically add a space (like the way it does
+when there is only a single completion possible). Instead it stays right after
+the `/` to allow user to continue completing further deeper in the tree
+(`foo/bar` and so on).
+
+To make programmable completion work like shell's builtin dir completion, the
+trick is to add another completion alternative `foo/ ` (with an added space) so
+shell won't automatically add a space because there are now more than one
+completion possible (`foo/` and `foo/ `).
+
+_
+    args => {
+        completion => { schema=>'str*', req=>1, pos=>0 },
+    },
+    result_naked => 1,
+};
+sub mimic_shell_dir_completion {
+    my %args  = @_;
+    my $c  = $args{completion};
+    return $c unless @$c == 1 && $c->[0] =~ m!/\z!;
+    [$c->[0], "$c->[0] "];
+}
+
 # current problems: Can't parse unclosed quotes (e.g. spanel get-plan "BISNIS
 # A<tab>) and probably other problems, since we don't have access to COMP_WORDS
 # like in shell functions.
@@ -294,7 +326,7 @@ SHARYANTO::Complete::Util - Shell tab completion routines
 
 =head1 VERSION
 
-This document describes version 0.03 of SHARYANTO::Complete::Util (from Perl distribution SHARYANTO-Complete-Util), released on 2014-05-05.
+This document describes version 0.04 of SHARYANTO::Complete::Util (from Perl distribution SHARYANTO-Complete-Util), released on 2014-06-24.
 
 =head1 FUNCTIONS
 
@@ -376,6 +408,33 @@ Arguments ('*' denotes required arguments):
 =over 4
 
 =item * B<word> => I<str> (default: "")
+
+=back
+
+Return value:
+
+
+=head2 mimic_shell_dir_completion(%args) -> any
+
+Make completion of paths behave more like shell.
+
+This function employs a trick to make directory/path completion work more like
+shell's own. In shell, when completing directory, the sole completion for C<foo/>
+is C<foo/>, the cursor doesn't automatically add a space (like the way it does
+when there is only a single completion possible). Instead it stays right after
+the C</> to allow user to continue completing further deeper in the tree
+(C<foo/bar> and so on).
+
+To make programmable completion work like shell's builtin dir completion, the
+trick is to add another completion alternative C<foo/> (with an added space) so
+shell won't automatically add a space because there are now more than one
+completion possible (C<foo/> and C<foo/>).
+
+Arguments ('*' denotes required arguments):
+
+=over 4
+
+=item * B<completion>* => I<str>
 
 =back
 
